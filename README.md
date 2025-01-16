@@ -1,6 +1,7 @@
 # Robotic Systems Course: ROS Module
 
-Welcome to the Robotic Systems Course GitHub repository! This repository is designed to accompany the ROS module of the course, providing essential resources, examples, and documentation to support your learning experience.
+Welcome to the Robotic Systems Course GitHub repository! This repository is designed to accompany the ROS module of the course SIE 496/596: Robotic Systems at the University of Arizona. 
+The repo contains a collection of resources, examples, and documentation to support your learning experience with ROS.
 
 ## Note
 
