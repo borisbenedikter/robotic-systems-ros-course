@@ -2,35 +2,40 @@
 
 Welcome to the Robotic Systems Course GitHub repository! This repository is designed to accompany the ROS module of the course, providing essential resources, examples, and documentation to support your learning experience.
 
+## Note
+
+This repository is in development and will be updated regularly. 
+Some of the content may be incomplete or subject to change.
+
 ## Repository Structure
 
 - **`docs/`**: Contains markdown documentation to guide you through various topics in ROS.
   - `installation_guide.md`: Step-by-step instructions to set up ROS.
-  - `ros_basics.md`: Basic concepts and usage of ROS.
+  <!-- - `ros_basics.md`: Basic concepts and usage of ROS.
   - `robot_simulation.md`: Guide on robot simulation using ROS.
-  - `advanced_topics.md`: Advanced topics in ROS for further exploration.
+  - `advanced_topics.md`: Advanced topics in ROS for further exploration. -->
 
 - **`examples/`**: A collection of example projects demonstrated during the course.
-  - `basic_ros_example/`: Basic example to get started with ROS.
+  <!-- - `basic_ros_example/`: Basic example to get started with ROS.
   - `robot_arm_control/`: Example for controlling a robotic arm.
   - `rover_navigation/`: Example for navigating a rover.
-  - `quadcopter_simulation/`: Example for simulating a quadcopter.
+  - `quadcopter_simulation/`: Example for simulating a quadcopter. -->
 
 - **`resources/`**: Additional resources such as lecture slides and recommended readings.
-  - `slides/`: Lecture slides used in the course.
+  <!-- - `slides/`: Lecture slides used in the course.
   - `papers/`: Research papers and articles related to robotics.
-  - `additional_reading.md`: Additional reading materials and references.
+  - `additional_reading.md`: Additional reading materials and references. -->
 
 ## Getting Started
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/your_username/Robotic_Systems_ROS_Course.git
+   git clone https://github.com/your_username/robotic-systems-ros-course.git
     ```
 
 2. **Navigate to the repository**:
     ```bash
-    cd Robotic_Systems_ROS_Course
+    cd robotic-systems-ros-course
     ```
 
 3. **Follow the instructions in the `docs/installation_guide.md` to set up ROS on your system**.
