@@ -4,7 +4,7 @@ Welcome to the Robotic Systems Course GitHub repository! This repository is desi
 
 ## Note
 
-This repository is in development and will be updated regularly. 
+⚠️ This repository is in development and will be updated regularly. 
 Some of the content may be incomplete or subject to change.
 
 ## Repository Structure
