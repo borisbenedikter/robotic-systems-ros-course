@@ -139,3 +139,63 @@ To install the base version of ROS 2, run the following command:
 ```bash
 sudo apt install ros-iron-base
 ```
+
+### Verify the Installation
+
+To verify the installation, start by setting up the ROS 2 environment.
+
+#### Environment Setup
+
+The ROS 2 environment must be set up in every new terminal window before using ROS 2 commands. You can set up the ROS 2 environment by using the following command:
+
+```bash
+# Replace ".bash" with your shell if you're not using bash
+# Possible values are: setup.bash, setup.sh, setup.zsh
+source /opt/ros/iron/setup.bash
+```
+
+The `sh` extension is used for the Bourne shell, which is the original Linux shell and is highly portable across different Unix-like systems (e.g., Linux, macOS).
+The `bash` extends the capabilities of the Bourne shell and is the default shell on most Linux distributions (including Ubuntu). It is also compatible with macOS.
+The `zsh` aims to be a superset of the `bash` shell and is currently the default shell on macOS.
+
+The `source` command is used to read and execute the content of a file in the current shell environment. The `/opt/ros/iron/setup.bash` file contains the ROS 2 environment setup.
+
+If you don't want to run the `source` command every time you open a new terminal window, you can add it to the shell configuration file. For example, to add it to the end of the `.bashrc` file, run the following command:
+
+```bash
+echo "source /opt/ros/iron/setup.bash" >> ~/.bashrc
+```
+
+Note that the `>>` operator is used to append the `source` command to the end of the `.bashrc` file. If you use the `>` operator, it will overwrite the content of the file, which is not what you want in this case as the `.bashrc` file contains other important configurations that you don't want to lose.
+
+Now, if you close the terminal window and open a new one, the new terminal window will actually read the `.bashrc` file and set up the ROS 2 environment automatically.
+
+#### Talker and Listener Example
+
+To verify the installation, run the talker and listener example.
+The talker and listener are two simple ROS 2 nodes that send and receive messages, respectively.
+You will need to open two terminal windows to run the talker and listener nodes.
+
+In the first terminal window, run the following command to start the talker node:
+
+```bash
+# Set up the ROS 2 environment (if your .bashrc file is not updated)
+source /opt/ros/iron/setup.bash 
+
+ros2 run demo_nodes_cpp talker
+```
+
+In the second terminal window, run the following command to start the listener node:
+
+```bash
+# Set up the ROS 2 environment (if your .bashrc file is not updated)
+source /opt/ros/iron/setup.bash
+
+ros2 run demo_nodes_cpp listener
+```
+
+If the installation is successful, you will see the talker node publishing (i.e., sending) messages (e.g., `Hello World 0`) and the listener node hearing (i.e., receiving) those messages.
+
+![Talker and Listener Example](figures/talker_listener.png)
+
+To stop the nodes, press `Ctrl + C` in each terminal window.
