@@ -17,6 +17,7 @@ Some of the content may be incomplete or subject to change.
   - `advanced_topics.md`: Advanced topics in ROS for further exploration. -->
 
 - **`examples/`**: A collection of example projects demonstrated during the course.
+  - `pub_sub_ws`: Example workspace containing a package with a publisher and subscriber node (like `talker` and `listener`).
   <!-- - `basic_ros_example/`: Basic example to get started with ROS.
   - `robot_arm_control/`: Example for controlling a robotic arm.
   - `rover_navigation/`: Example for navigating a rover.

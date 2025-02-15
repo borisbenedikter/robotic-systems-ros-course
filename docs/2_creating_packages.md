@@ -5,14 +5,14 @@ In this section, we will see how to create and build a ROS 2 workspace with `col
 In ROS 1, multiple different tools were used, namely `catkin_make`, `catkin_make_isolated`, and `catkin_tools`.
 `colcon` is a unified build tool that replaces all of these tools.
 
-<!-- ### Install `colcon`
+### Install `colcon`
 
 It may be already installed in your system, as it comes with the ROS 2 installation.
 To install `colcon`, you can use the following command in Linux:
 
 ```bash
 sudo apt install python3-colcon-common-extensions
-``` -->
+```
 
 ### Workspace File Structure
 
@@ -205,3 +205,61 @@ For instance, you can modify the `package.xml` file to include your name as the 
 
 The `setup.py` file contains the same metadata as the `package.xml` file.
 Thus, you would have to modify the `setup.py` file to include the same information as the `package.xml` file.
+
+### Publisher-Subscriber Example
+
+Let's create a simple publisher-subscriber example in ROS 2.
+To create a simple publisher-subscriber example, we will create a new package called `pub_sub` with a Python publisher node and a Python subscriber node.
+
+#### Create a New Workspace
+
+Let's start by creating a new ROS 2 workspace called `pub_sub_ws`.
+To create a new ROS 2 workspace, you need simply to create a directory with the `src` subdirectory.
+
+#### Create the Package
+
+Once the `pub_sub_ws/src` directory is created, you need to populate it with packages.
+In this case, we will create only one package called `pub_sub`.
+So, let's create the `pub_sub` package with the following command:
+
+```bash
+cd <path/to>/pub_sub_ws/src
+ros2 pkg create --build-type ament_python --license Apache-2.0 --node-name pub_sub_hello_world pub_sub
+```
+
+The `pkg create` command creates a simple Hello World executable node in the package.
+
+Once the package is created, you can build the workspace with `colcon` from the root directory of the workspace:
+
+```bash
+cd <path/to>/pub_sub_ws
+colcon build --symlink-install
+```
+
+After building the workspace, you can source it and run the `pub_sub_hello_world` executable node:
+
+```bash
+source <path/to>/pub_sub_ws/install/setup.bash
+ros2 run pub_sub pub_sub_hello_world
+```
+
+If the node is running correctly, you will see the message `Hi from pub_sub` printed to the console.
+
+#### Create the Publisher Node
+
+The hello world node is a simple node that prints `Hi from pub_sub` to the console.
+We want to create a publisher node that publishes messages to a topic and a subscriber node that subscribes to the topic.
+Writing the source code of a package from scratch is a tedious task.
+Thus, it is better to start from an existing package and modify it.
+In this case, we will start from the `py_pubsub` package, which is a simple publisher-subscriber example available in the `ros2` GitHub `examples` repository.
+
+A simple, minimal publisher node is available in the `ros2` GitHub `examples` repository.
+To add the publisher node to the `pub_sub` package, you must copy the source code of the publisher node to the `pub_sub` source directory.
+Specifically, move into the `pub_sub_ws/src/pub_sub/pub_sub` directory and download the publisher node source code:
+
+```bash
+cd <path/to>/pub_sub_ws/src/pub_sub/pub_sub
+wget https://raw.githubusercontent.com/ros2/examples/iron/rclpy/topics/minimal_publisher/examples_rclpy_minimal_publisher/publisher_member_function.py
+```
+
+There will be a new file `publisher_member_function.py` in the `pub_sub` package directory.
