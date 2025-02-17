@@ -214,7 +214,7 @@ To create a simple publisher-subscriber example, we will create a new package ca
 #### Create a New Workspace
 
 Let's start by creating a new ROS 2 workspace called `pub_sub_ws`.
-To create a new ROS 2 workspace, you need simply to create a directory with the `src` subdirectory.
+To create a new ROS 2 workspace, you need simply to create a directory with a `src` subdirectory.
 
 #### Create the Package
 
@@ -263,3 +263,231 @@ wget https://raw.githubusercontent.com/ros2/examples/iron/rclpy/topics/minimal_p
 ```
 
 There will be a new file `publisher_member_function.py` in the `pub_sub` package directory.
+
+#### Examine the Publisher Node Source Code
+
+The `publisher_member_function.py` file contains the source code of the publisher node.
+It is interesting to observe the structure of the node.
+The node is a Python class that inherits from the `Node` class of the `rclpy.node` module.
+Indeed, it is defined as follows:
+
+```python
+class MinimalPublisher(Node):
+```
+
+The constructor of the class is:
+
+```python
+def __init__(self):
+    super().__init__('minimal_publisher')
+    self.publisher_ = self.create_publisher(String, 'topic', 10)
+    timer_period = 0.5  # seconds
+    self.timer = self.create_timer(timer_period, self.timer_callback)
+    self.i = 0
+```
+
+The constructor initializes the base class by calling its constructor `super().__init__('minimal_publisher')`.
+It creates a publisher object by calling the `create_publisher` method of the `Node` class.
+The arguments of the `create_publisher` method are the message type (`String`), the topic name (`'topic'`), and the queue size (`10`).
+The queue size is the maximum number of messages that can be stored in the publisher queue.
+The constructor also creates a timer object with a callback period of 0.5 seconds by calling the `create_timer` method of the `Node` class.
+A counter `self.i` is also initialized to 0.
+
+The callback function of the timer is:
+
+```python
+def timer_callback(self):
+    msg = String()
+    msg.data = 'Hello World: %d' % self.i
+    self.publisher_.publish(msg)
+    self.get_logger().info('Publishing: "%s"' % msg.data)
+    self.i += 1
+```
+
+The callback function creates a `String` message object, sets its data field to `'Hello World: %d' % self.i`, publishes the message, logs the message to the console, and increments the counter `self.i`.
+
+The main function of the node is:
+
+```python
+def main(args=None):
+    rclpy.init(args=args)
+
+    minimal_publisher = MinimalPublisher()
+
+    rclpy.spin(minimal_publisher)
+
+    # Destroy the node explicitly
+    # (optional - otherwise it will be done automatically
+    # when the garbage collector destroys the node object)
+    minimal_publisher.destroy_node()
+    rclpy.shutdown()
+```
+
+The main function initializes the ROS 2 client library, creates an instance of the `MinimalPublisher` class, spins the node, and then destroys the node and shuts down the client library.
+
+#### Add Dependencies to the `package.xml` File
+
+Once new source code is added to the package, you must update the `package.xml` and `setup.py` files.
+The `package.xml` file must include the dependencies of the package.
+
+To see which dependencies are introduced by the publisher node, you must examine the source code of the publisher node.
+Specifically, since it is a Python node, you must look for the Python packages that are imported in the source code.
+The first lines of the `publisher_member_function.py` file are:
+
+```python
+import rclpy
+from rclpy.node import Node
+
+from std_msgs.msg import String
+```
+
+Thus, you must include the `rclpy` and `std_msgs` packages as dependencies in the `package.xml` file.
+To do this, open the `package.xml` file and add the following lines within the `<package>` tag:
+
+```xml
+<exec_depend>rclpy</exec_depend>
+<exec_depend>std_msgs</exec_depend>
+```
+
+This declares that the package needs the `rclpy` and `std_msgs` packages to run.
+
+#### Add Entry Points to the `setup.py` File
+
+In the `setup.py` file, you must update the `entry_points` dictionary to include the new publisher node.
+To do this, open the `setup.py` file and modify the `entry_points` dictionary as follows:
+
+```python
+    entry_points={
+        'console_scripts': [
+            'pub_sub_hello_world = pub_sub.pub_sub_hello_world:main',
+            'pub_sub_talker = pub_sub.publisher_member_function:main',
+        ],
+    },
+```
+
+This declares that the package has a new executable node called `talker`, which executes the `main` function in the `publisher_member_function.py` file of the `pub_sub` package.
+The general syntax for adding an executable node to the `entry_points` dictionary is
+
+```python
+'<node_name> = <package_name>.<node_file>:<function>'
+```
+
+where `<node_name>` is the name of the executable node, `<package_name>` is the name of the package, `<node_file>` is the name of the Python file containing the node code (without the `.py` extension), and `<function>` is the name of the function that runs the node.
+
+#### Create the Subscriber Node
+
+The `examples` repository also contains a simple subscriber node.
+We can download the source code of the subscriber node to the `pub_sub/pub_sub` directory with the following command:
+
+```bash
+cd <path/to>/pub_sub_ws/src/pub_sub/pub_sub
+wget https://raw.githubusercontent.com/ros2/examples/iron/rclpy/topics/minimal_subscriber/examples_rclpy_minimal_subscriber/subscriber_member_function.py
+```
+
+There will be a new file `subscriber_member_function.py` in the `pub_sub` package directory.
+This file is very similar to the `publisher_member_function.py` file, but it initializes a subscriber object by calling the `create_subscription` method of the `Node` class and defines a listener callback function that logs the received message to the console.
+
+
+#### Examine the Subscriber Node Source Code
+
+The `subscriber_member_function.py` file contains the source code of the subscriber node.
+The structure of the subscriber node is similar to that of the publisher node.
+The subscriber node is a Python class that inherits from the `Node` class of the `rclpy.node` module.
+
+```python
+class MinimalSubscriber(Node):
+
+    def __init__(self):
+        super().__init__('minimal_subscriber')
+        self.subscription = self.create_subscription(
+            String,
+            'topic',
+            self.listener_callback,
+            10)
+        self.subscription  # prevent unused variable warning
+```
+
+The constructor of the class creates a subscriber object by calling the `create_subscription` method of the `Node` class.
+The arguments of the `create_subscription` method are the message type (`String`), the topic name (`'topic'`), the callback function (`self.listener_callback`), and the queue size (`10`).
+
+The callback function of the subscriber is:
+
+```python
+    def listener_callback(self, msg):
+        self.get_logger().info('I heard: "%s"' % msg.data)
+```
+
+The callback function takes as input the received message and, in this case, logs the message to the console.
+
+The main function of the subscriber node is analogous to that of the publisher node:
+
+```python
+def main(args=None):
+    rclpy.init(args=args)
+
+    minimal_subscriber = MinimalSubscriber()
+
+    rclpy.spin(minimal_subscriber)
+
+    # Destroy the node explicitly
+    # (optional - otherwise it will be done automatically
+    # when the garbage collector destroys the node object)
+    minimal_subscriber.destroy_node()
+    rclpy.shutdown()
+```
+
+The main function initializes the ROS 2 client library, creates an instance of the `MinimalSubscriber` class, spins the node, and then destroys the node and shuts down the client library.
+
+#### Add Entry Points to the `setup.py` File
+
+The subscriber node does not introduce any new dependencies compared to the publisher node.
+Thus, there is no need to update the `package.xml` file.
+However, you must update the `setup.py` file to include the new entry point for the subscriber node.
+To do this, open the `setup.py` file and modify the `entry_points` dictionary as follows:
+
+```python
+    entry_points={
+        'console_scripts': [
+            'pub_sub_hello_world = pub_sub.pub_sub_hello_world:main',
+            'pub_sub_talker = pub_sub.publisher_member_function:main',
+            'pub_sub_listener = pub_sub.subscriber_member_function:main',
+        ],
+    },
+```
+
+#### Build and Run the Package
+
+It is best practice to run the `rosdep` command to resolve the dependencies of the new package:
+
+```bash
+cd <path/to>/pub_sub_ws
+rosdep install -i --from-path src --rosdistro iron -y
+```
+
+After resolving the dependencies, you can build the `pub_sub` package with `colcon`:
+
+```bash
+colcon build --symlink-install --packages-select pub_sub
+```
+
+Once the package is built, you can open a new terminal window and source the workspace:
+
+```bash
+source <path/to>/pub_sub_ws/install/setup.bash
+```
+
+You can run the publisher node with the following command:
+
+```bash
+ros2 run pub_sub pub_sub_talker
+```
+
+In another terminal window, you can source the workspace and run the subscriber node with the following commands:
+
+```bash
+source <path/to>/pub_sub_ws/install/setup.bash
+ros2 run pub_sub pub_sub_listener
+```
+
+If the nodes are running correctly, you will see the messages being published and subscribed to in the terminal windows.
+To stop the nodes from spinning, you can press `Ctrl + C` in each terminal window.
