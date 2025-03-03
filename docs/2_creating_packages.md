@@ -96,6 +96,12 @@ rosdep install -i --from-path src --rosdistro iron -y
 Note that the `rosdep` command must be run from the root directory of the workspace.
 The flag `-i` ignores any packages that are already installed, the flag `--from-path` specifies the path to the source directory of the packages whose dependencies need to be resolved, the flag `--rosdistro` specifies the ROS distribution, and the flag `-y` installs the dependencies without asking for confirmation.
 
+`rosdep` will check for `package.xml` files in its path or for a specific package and find the rosdep keys stored within. These keys are then cross-referenced against a central index to find the appropriate ROS package or software library in various package managers. Finally, once the packages are found, they are installed and ready to go!
+
+The `package.xml` is the file in your software where rosdep finds the set of dependencies. It is important that the list of dependencies in the `package.xml` is complete and correct, which allows all of the tooling to determine the package's dependencies. The dependencies in the `package.xml` file are generally referred to as `rosdep keys`. These dependencies are manually populated in the `package.xml` file by the package’s creators.
+These are represented in the following tags: `<depend>`, `<build_depend>`, `<exec_depend>`, `<test_depend>`, and `<build_export_depend>`.
+More information on the `package.xml` file can be found in the later section on [Add Dependencies to the `package.xml` File](#add-dependencies-to-the-packagexml-file).
+
 If `rosdep` is not installed, you can install it with the following command:
 
 ```bash
