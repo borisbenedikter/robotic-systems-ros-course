@@ -96,6 +96,15 @@ rosdep install -i --from-path src --rosdistro iron -y
 Note that the `rosdep` command must be run from the root directory of the workspace.
 The flag `-i` ignores any packages that are already installed, the flag `--from-path` specifies the path to the source directory of the packages whose dependencies need to be resolved, the flag `--rosdistro` specifies the ROS distribution, and the flag `-y` installs the dependencies without asking for confirmation.
 
+If `rosdep` is not installed, you can install it with the following command:
+
+```bash
+sudo apt install python3-rosdep
+```
+
+On Debian and Ubuntu, there is another, similarly named package called `python3-rosdep2`. 
+If that package is installed, make sure to remove it before installing `python3-rosdep`.
+
 The first time you run the `rosdep` command, the system may ask you to initialize and update the `rosdep` database.
 To do this, you would need to run the following commands:
 
