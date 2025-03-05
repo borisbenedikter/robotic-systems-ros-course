@@ -214,7 +214,7 @@ class MotionCommand(Node):
 
     def __init__(self):
         # Initialize the base class
-        super().__init__('minimal_publisher')
+        super().__init__('motion_command')
 
         # Create a subscriber to the bump_expectation topic
         self.subscription = self.create_subscription(
@@ -325,14 +325,14 @@ Finally, the `main` function creates an instance of the `MotionCommand` class an
 def main(args=None):
     rclpy.init(args=args)
 
-    minimal_publisher = MotionCommand()
+    motion_command = MotionCommand()
 
-    rclpy.spin(minimal_publisher)
+    rclpy.spin(motion_command)
 
     # Destroy the node explicitly
     # (optional - otherwise it will be done automatically
     # when the garbage collector destroys the node object)
-    minimal_publisher.destroy_node()
+    motion_command.destroy_node()
     rclpy.shutdown()
 
 if __name__ == '__main__':
