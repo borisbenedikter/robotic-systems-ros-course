@@ -1,6 +1,5 @@
 build/
 install/
 log/
-resource/
 __pycache__/
 gazebo/models
