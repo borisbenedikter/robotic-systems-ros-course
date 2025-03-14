@@ -24,7 +24,7 @@ Some of the content may be incomplete or subject to change.
   - `quadcopter_simulation/`: Example for simulating a quadcopter. -->
 
 - **`resources/`**: Additional resources such as lecture slides and recommended readings.
-  - `Dockerfile`: Dockerfile for setting up a Ubuntu 22.04 environment with ROS Iron installed. The image can be used to run the course examples and projects. Also you can use it to import a WSL2 distro with ROS Iron installed.
+  - `pre_installed_image`: Constains a Dockerfile and instructions for setting up a Ubuntu 22.04 environment with ROS Iron installed. The docker image can be used to run the course examples and projects. Also you can use it to import a WSL2 distro with ROS Iron installed in your Windows machine.
   <!-- - `slides/`: Lecture slides used in the course.
   - `papers/`: Research papers and articles related to robotics.
   - `additional_reading.md`: Additional reading materials and references. -->
@@ -33,54 +33,6 @@ Some of the content may be incomplete or subject to change.
 
 **Follow the instructions in the `docs/installation_guide.md` to set up ROS on your system**.
 
-## Importing a Docker Image into WSL2
-To import a Docker image into WSL2, follow these steps:
-
-**Download the Docker image**:
-  
-The Docker image is available in the `resources/` directory as `ubuntu22rosiron.tar`. Download it to your local Windows machine and save it in the directory `C:\temp\`.
-
-**Open PowerShell**:
-
-  Open PowerShell on your Windows machine and navigate to the directory where you saved the Docker image. For example:
-
-```powershell
-  cd C:\temp\
-```
-
-**Create a New Directory for the WSL2 Distro**:
-
-Create a new directory for the WSL2 distro. For example,
-
-```powershell
-mkdir C:\wslDistroStorage\ubuntu22rosiron
-```
-
-**Import the Docker Image**:
-
-Use the `wsl --import` command to import the Docker image into WSL2. Replace `<DistroName>` with the name you want to give to your WSL2 distro (e.g., `ubuntu22rosiron`):
-
-```powershell
-wsl --import ubuntu22rosiron C:\wslDistroStorage\ubuntu22rosiron C:\temp\ubuntu22rosiron.tar 
-```
-
-**Run the WSL2 Distro**:
-
-After importing the image, you can run the WSL2 distro using the following command in PowerShell:
-
-```powershell
-wsl -d ubuntu22rosiron
-```
-
-You can also verify if ROS is installed correctly by sourcing the ROS environment and launching the `talker` node:
-
-```bash
-source /opt/ros/iron/setup.bash 
-ros2 run demo_nodes_cpp talker
-```
-
-The rosuser's password is `rosuser`.
-   
 ## Contributing
 
 Contributions are welcome! If you find any issues or you'd like to improve the examples or documentation, please send an email to `boris@arizona.edu`.
