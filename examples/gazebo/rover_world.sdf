@@ -1,0 +1,133 @@
+<?xml version="1.0" ?>
+<sdf version="1.8">
+    <!-- Define the world environment -->
+    <world name="rover_world">
+        
+        <!-- Physics settings for the simulation -->
+        <physics name="1ms" type="ignored">
+            <max_step_size>0.001</max_step_size> <!-- Simulation step size -->
+            <real_time_factor>1.0</real_time_factor> <!-- Speed relative to real-time -->
+        </physics>
+        
+        <!-- Plugins to extend Gazebo functionalities -->
+        <!-- Default physics engine -->
+        <plugin
+            filename="libignition-gazebo-physics-system.so" 
+            name="ignition::gazebo::systems::Physics">
+        </plugin>
+        <!-- User commands for controlling the simulation -->
+        <plugin 
+            filename="libignition-gazebo-user-commands-system.so" 
+            name="ignition::gazebo::systems::UserCommands">
+        </plugin>        
+        <!-- Broadcasts the scene to GUI clients -->
+        <plugin 
+            filename="libignition-gazebo-scene-broadcaster-system.so" 
+            name="ignition::gazebo::systems::SceneBroadcaster">
+        </plugin>
+        
+        <!-- Define a directional light (e.g., sun) -->
+        <light type="directional" name="sun">
+            <!-- Enable shadow casting -->
+            <cast_shadows>true</cast_shadows> 
+            <!-- Position in the world -->
+            <!-- <pose> x y z roll pitch yaw </pose> -->
+            <pose>0 0 10 0 0 0</pose> 
+            <!-- Light direction (mostly downward) -->
+            <direction>-0.5 0.1 -0.9</direction>
+            <!-- Diffuse (i.e., scattered) light -->
+            <!-- <diffuse> R G B alpha </diffuse> -->
+            <!-- Fully opaque light gray -->
+            <diffuse>0.8 0.8 0.8 1</diffuse> 
+            <!-- Shiny highlights on reflective surfaces -->
+            <!-- Fully opaque dark gray -->
+            <specular>0.2 0.2 0.2 1</specular>
+            <!-- Attenuation over distance -->
+            <attenuation>
+                <!-- Max distance light travels -->
+                <range>1000</range>
+                <!-- Quadratic fun of distance -->
+                <!-- Light = 1 / (C + L * d + Q * d^2) -->
+                <constant>0.9</constant>    <!-- C -->
+                <linear>0.01</linear>       <!-- L -->
+                <quadratic>0.001</quadratic> <!-- Q -->
+            </attenuation>
+        </light>
+        
+        <!-- Define a ground plane -->
+        <model name="ground_plane">
+            <static>true</static> <!-- The ground does not move -->
+            <link name="link">
+                <collision name="collision">
+                    <geometry>
+                        <plane>
+                            <!-- Flat horizontal surface -->
+                            <normal>0 0 1</normal> 
+                        </plane>
+                    </geometry>
+                </collision>
+                <visual name="visual">
+                    <geometry>
+                        <plane>
+                            <!-- Flat horizontal surface -->
+                            <normal>0 0 1</normal>
+                            <!-- Ground size -->
+                            <size>100 100</size> 
+                        </plane>
+                    </geometry>
+                    <material> <!-- Ground color -->
+                        <ambient>0.8 0.8 0.8 1</ambient> <!-- Base color -->
+                        <diffuse>0.8 0.8 0.8 1</diffuse>
+                        <specular>0.8 0.8 0.8 1</specular>
+                    </material>
+                </visual>
+            </link>
+        </model>
+        
+        <!-- Define a simple vehicle model -->
+        <model name='vehicle_blue' canonical_link='chassis'>
+            <pose relative_to='world'>0 0 0 0 0 0</pose> <!-- Position of the vehicle in the world -->
+            
+            <!-- Chassis (main body) of the vehicle -->
+            <link name='chassis'>
+                <pose relative_to='__model__'>0.5 0 0.4 0 0 0</pose>
+                
+                <!-- Inertial properties for physics simulation -->
+                <inertial>
+                    <mass>1.14395</mass> <!-- Mass of the chassis -->
+                    <inertia>
+                        <ixx>0.095329</ixx>
+                        <ixy>0</ixy>
+                        <ixz>0</ixz>
+                        <iyy>0.381317</iyy>
+                        <iyz>0</iyz>
+                        <izz>0.476646</izz>
+                    </inertia>
+                </inertial>
+                
+                <!-- Visual representation of the chassis -->
+                <visual name='visual'>
+                    <geometry>
+                        <box>
+                            <size>2.0 1.0 0.5</size> <!-- Chassis dimensions -->
+                        </box>
+                    </geometry>
+                    <material> <!-- Color of the vehicle -->
+                        <ambient>0.0 0.0 1.0 1</ambient>
+                        <diffuse>0.0 0.0 1.0 1</diffuse>
+                        <specular>0.0 0.0 1.0 1</specular>
+                    </material>
+                </visual>
+                
+                <!-- Collision properties for physics simulation -->
+                <collision name='collision'>
+                    <geometry>
+                        <box>
+                            <size>2.0 1.0 0.5</size> <!-- Same size as visual -->
+                        </box>
+                    </geometry>
+                </collision>
+            </link>
+        </model>
+    </world>
+</sdf>
