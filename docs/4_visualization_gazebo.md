@@ -232,6 +232,272 @@ The `<size>` element defines the size of the ground plane in the x and y directi
 
 The `<visual>` also contains a `<material>` element that defines the color of the ground plane.
 The `<ambient>`, `<diffuse>`, and `<specular>` elements define the RGBA values of the ambient, diffuse, and specular colors of the ground plane.
-The ambient color is the base color of the ground plane, the diffuse color is the color of the scattered light, and the specular color is the color of the shiny highlights on the ground plane.
+The ambient color is the base color of the ground plane (i.e., when there is no light shining on it), the diffuse color is the color of the scattered light, and the specular color is the color of the shiny highlights on the ground plane.
 
+#### Rover Robot (Chassis)
+
+The following lines show how to define a simple rover robot model:
+
+```xml
+<?xml version="1.0" ?>
+<sdf version="1.8">
+    <!-- Define the world environment -->
+    <world name="rover_world">
+
+        <!-- Define a simple rover model -->
+        <model name='rover_blue' canonical_link='chassis'>
+            <!-- Position of the rover in the world -->
+            <pose relative_to='world'>0 0 0 0 0 0</pose>
+            
+            <!-- Chassis (main body) of the rover -->
+            <link name='chassis'>
+                <pose relative_to='__model__'>0.5 0 0.4 0 0 0</pose>
+                
+                <!-- Inertial properties for physics simulation -->
+                <inertial>
+                    <mass>1.14395</mass>
+                    <inertia>
+                        <ixx>0.095329</ixx>
+                        <ixy>0</ixy>
+                        <ixz>0</ixz>
+                        <iyy>0.381317</iyy>
+                        <iyz>0</iyz>
+                        <izz>0.476646</izz>
+                    </inertia>
+                </inertial>
+                
+                <!-- Visual representation of the chassis -->
+                <visual name='visual'>
+                    <geometry>
+                        <box>
+                            <!-- Chassis dimensions -->
+                            <size>2.0 1.0 0.5</size> 
+                        </box>
+                    </geometry>
+                    <material> <!-- Color of the rover -->
+                        <ambient>0.0 0.0 1.0 1</ambient>
+                        <diffuse>0.0 0.0 1.0 1</diffuse>
+                        <specular>0.0 0.0 1.0 1</specular>
+                    </material>
+                </visual>
+                
+                <!-- Collision properties for physics simulation -->
+                <collision name='collision'>
+                    <geometry>
+                        <box>
+                            <!-- Same size as visual -->
+                            <size>2.0 1.0 0.5</size> 
+                        </box>
+                    </geometry>
+                </collision>
+            </link>
+        </model>
+
+    </world>
+</sdf>
+```
+
+In this example, the `<model>` element defines a simple rover robot model named `rover_blue`.
+In the `<model>` element, the `canonical_link` attribute specifies the link where the model's reference frame is located.
+If no `canonical_link` is specified, the first link in the model is used as the reference frame.
+The rover is placed at the origin of the world, with orientation `(0, 0, 0)`.
+
+The rover model consists of a single `<link>` element named `chassis`, which represents the main body of the rover.
+The `chassis` link is positioned relative to the model at `(0.5, 0, 0.4)` with orientation `(0, 0, 0)`.
+The position and orientation of the `chassis` link are relative to the model, which allows for easy positioning of the link within the model.
+
+The mass and inertia tensor of the `chassis` link are defined in the `<inertial>` element.
+Note that only six elements of the inertia tensor are required, as the inertia tensor is symmetric.
+
+The visual representation of the `chassis` link is defined in the `<visual>` element.
+The chassis is represented as a box with dimensions `(2.0, 1.0, 0.5)`.
+The color of the rover is defined by the `<material>` element, which contains the ambient, diffuse, and specular colors of the rover, all set to blue (RGB: 0, 0, 1).
+
+The collision properties of the `chassis` link are analogous to the visual properties, as the collision geometry is a box with the same dimensions as the visual geometry.
+
+#### Rover Robot (Chassis and Wheels)
+
+We can add to the vehicle model a left, right, and caster wheel.
+The following links are added to the model:
+
+```xml
+<!-- The left wheel link: -->
+<link name='left_wheel'>
+    <!-- Left-back position -->
+    <!-- The wheel is a cylinder rotated 90 degrees around the Roll axis -->
+    <pose relative_to="chassis">-0.5 0.6 0 -1.5707 0 0</pose>
+    <inertial>
+        <mass>1</mass>
+        <inertia>
+            <ixx>0.043333</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>0.043333</iyy>
+            <iyz>0</iyz>
+            <izz>0.08</izz>
+        </inertia>
+    </inertial>
+    <visual name='visual'>
+        <geometry>
+            <cylinder>
+                <radius>0.4</radius>
+                <length>0.2</length>
+            </cylinder>
+        </geometry>
+        <material>
+            <!-- Red -->
+            <ambient>1.0 0.0 0.0 1</ambient>
+            <diffuse>1.0 0.0 0.0 1</diffuse>
+            <specular>1.0 0.0 0.0 1</specular>
+        </material>
+    </visual>
+    <collision name='collision'>
+    <!-- Same as visual -->
+        <geometry>
+            <cylinder>
+                <radius>0.4</radius>
+                <length>0.2</length>
+            </cylinder>
+        </geometry>
+    </collision>
+</link>
+```
+
+```xml
+<!--The right wheel is the same as the left wheel but with different position-->
+<link name='right_wheel'>
+    <pose relative_to="chassis">-0.5 -0.6 0 -1.5707 0 0</pose> <!--angles are in radian-->
+    <inertial>
+        <mass>1</mass>
+        <inertia>
+            <ixx>0.043333</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>0.043333</iyy>
+            <iyz>0</iyz>
+            <izz>0.08</izz>
+        </inertia>
+    </inertial>
+    <visual name='visual'>
+        <geometry>
+            <cylinder>
+                <radius>0.4</radius>
+                <length>0.2</length>
+            </cylinder>
+        </geometry>
+        <material>
+            <ambient>1.0 0.0 0.0 1</ambient>
+            <diffuse>1.0 0.0 0.0 1</diffuse>
+            <specular>1.0 0.0 0.0 1</specular>
+        </material>
+    </visual>
+    <collision name='collision'>
+        <geometry>
+            <cylinder>
+                <radius>0.4</radius>
+                <length>0.2</length>
+            </cylinder>
+        </geometry>
+    </collision>
+</link>
+```
+
+```xml
+<!-- For convenience, we define a new frame for the caster wheel -->
+<frame name="caster_frame" attached_to='chassis'>
+    <pose>0.8 0 -0.2 0 0 0</pose>
+</frame>
+<!--caster wheel-->
+<link name='caster'>
+    <pose relative_to='caster_frame'/>
+    <inertial>
+        <mass>1</mass>
+        <inertia>
+            <ixx>0.016</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>0.016</iyy>
+            <iyz>0</iyz>
+            <izz>0.016</izz>
+        </inertia>
+    </inertial>
+    <visual name='visual'>
+        <geometry>
+            <!-- Note: the caster wheel is a sphere, not a cylinder -->
+            <sphere>
+                <radius>0.2</radius>
+            </sphere>
+        </geometry>
+        <material>
+            <ambient>0.0 1 0.0 1</ambient>
+            <diffuse>0.0 1 0.0 1</diffuse>
+            <specular>0.0 1 0.0 1</specular>
+        </material>
+    </visual>
+    <collision name='collision'>
+        <geometry>
+            <sphere>
+                <radius>0.2</radius>
+            </sphere>
+        </geometry>
+    </collision>
+</link>
+```
+
+We need to connect these links together; here comes the job of the `<joint>` tag.
+The joint tag connects two links together and defines how they will move with respect to each other.
+Inside the `<joint>` tag we need to define the two links to connect and their relations (way of movement).
+
+The left wheel joint must connect the `chassis` link to the `left_wheel` link.
+The following lines define the left wheel joint:
+
+```xml
+<joint name='left_wheel_joint' type='revolute'>
+    <pose relative_to='left_wheel'/>
+    <parent>chassis</parent>
+    <child>left_wheel</child>
+    <axis>
+        <xyz expressed_in='__model__'>0 1 0</xyz> <!--can be defined as any frame or even arbitrary frames-->
+        <limit>
+            <lower>-1.79769e+308</lower>    <!--negative infinity-->
+            <upper>1.79769e+308</upper>     <!--positive infinity-->
+        </limit>
+    </axis>
+</joint>
+```
+
+The left wheel joint is a revolute joint, which means that the two links can rotate around an axis.
+The `<parent>` tag specifies the parent link of the joint (in this case, the `chassis` link), while the `<child>` tag specifies the child link of the joint (in this case, the `left_wheel` link).
+The `<axis>` tag specifies the axis of rotation of the joint, which is the y-axis in this case.
+The `<limit>` tag specifies the lower and upper limits of the joint angle, which are set to negative and positive infinity, respectively.
+
+The right wheel joint is defined in the same way as the left wheel joint, but with different names and positions:
+
+```xml
+<joint name='right_wheel_joint' type='revolute'>
+    <pose relative_to='right_wheel'/>
+    <parent>chassis</parent>
+    <child>right_wheel</child>
+    <axis>
+        <xyz expressed_in='__model__'>0 1 0</xyz>
+        <limit>
+            <lower>-1.79769e+308</lower>    <!--negative infinity-->
+            <upper>1.79769e+308</upper>     <!--positive infinity-->
+        </limit>
+    </axis>
+</joint>
+```
+
+For the caster wheel, we need a different type of joint, called a `ball` joint, which gives the caster wheel three rotational degrees of freedom:
+
+```xml
+<joint name='caster_wheel' type='ball'>
+    <parent>chassis</parent>
+    <child>caster</child>
+</joint>
+```
+
+After adding all these links and joints to the SDF file, the vehicle model will be loaded in Gazebo with the specified links and joints.
+
+![Gazebo with a vehicle model with joints](figures/gazebo_rover_world.png)
 
