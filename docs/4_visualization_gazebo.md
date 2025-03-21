@@ -274,7 +274,7 @@ The following lines show how to define a simple rover robot model:
                             <size>2.0 1.0 0.5</size> 
                         </box>
                     </geometry>
-                    <material> <!-- Color of the rover -->
+                    <material> <!-- Color of the chassis -->
                         <ambient>0.0 0.0 1.0 1</ambient>
                         <diffuse>0.0 0.0 1.0 1</diffuse>
                         <specular>0.0 0.0 1.0 1</specular>
@@ -323,7 +323,7 @@ The following links are added to the model:
 ```xml
 <!-- The left wheel link: -->
 <link name='left_wheel'>
-    <!-- Left-back position -->
+    <!-- Back (-x) and left (+y) position -->
     <!-- The wheel is a cylinder rotated 90 degrees around the Roll axis -->
     <pose relative_to="chassis">-0.5 0.6 0 -1.5707 0 0</pose>
     <inertial>
@@ -366,7 +366,8 @@ The following links are added to the model:
 ```xml
 <!--The right wheel is the same as the left wheel but with different position-->
 <link name='right_wheel'>
-    <pose relative_to="chassis">-0.5 -0.6 0 -1.5707 0 0</pose> <!--angles are in radian-->
+    <!-- Back (-x) and right (-y) position -->
+    <pose relative_to="chassis">-0.5 -0.6 0 -1.5707 0 0</pose> 
     <inertial>
         <mass>1</mass>
         <inertia>
@@ -405,7 +406,8 @@ The following links are added to the model:
 ```xml
 <!-- For convenience, we define a new frame for the caster wheel -->
 <frame name="caster_frame" attached_to='chassis'>
-    <pose>0.8 0 -0.2 0 0 0</pose>
+    <!-- Front (+x) and below (-z) -->
+    <pose>0.8 0 -0.2 0 0 0</pose> 
 </frame>
 <!--caster wheel-->
 <link name='caster'>
@@ -499,5 +501,23 @@ For the caster wheel, we need a different type of joint, called a `ball` joint, 
 
 After adding all these links and joints to the SDF file, the vehicle model will be loaded in Gazebo with the specified links and joints.
 
+The complete SDF file for the world environment with the rover robot model is available [here](../examples/gazebo/rover_world.sdf).
+
+### Launching the Gazebo Simulation
+
+To launch the Gazebo simulation with the SDF file, you can use the following command:
+
+```bash
+ign gazebo --render-engine ogre <path/to>/car_world.sdf
+```
+
+The `--render-engine ogre` flag forces Gazebo to use the OGRE1 rendering engine instead of OGRE2, which is the default rendering engine in Gazebo Fortress.
+This is recommended if you are using WSL2, as OGRE2 may not work correctly in WSL2.
+
 ![Gazebo with a vehicle model with joints](figures/gazebo_rover_world.png)
 
+The simulation is halted at the beginning, and you can start it by pressing the play button in the Gazebo GUI.
+
+### Official SDF Documentation
+
+For more information on the SDF format and its elements, you can refer to the official SDF documentation [here](http://sdformat.org/spec).

@@ -2,6 +2,8 @@
 <sdf version="1.8">
     <!-- Define the world environment -->
     <world name="rover_world">
+        <!-- Define the world's gravity -->
+        <gravity>0 0 -9.81</gravity>
         
         <!-- Physics settings for the simulation -->
         <physics name="1ms" type="ignored">
@@ -114,7 +116,7 @@
                             <size>2.0 1.0 0.5</size> 
                         </box>
                     </geometry>
-                    <material> <!-- Color of the rover -->
+                    <material> <!-- Color of the chassis (Blue) -->
                         <ambient>0.0 0.0 1.0 1</ambient>
                         <diffuse>0.0 0.0 1.0 1</diffuse>
                         <specular>0.0 0.0 1.0 1</specular>
@@ -134,7 +136,7 @@
 
             <!-- The left wheel link: -->
             <link name='left_wheel'>
-                <!-- Left-back position -->
+                <!-- Back (-x) and left (+y) position -->
                 <!-- The wheel is a cylinder rotated 90 deg 
                 around the Roll axis -->
                 <pose relative_to="chassis">
@@ -178,8 +180,8 @@
             <!--The right wheel is the same as the left wheel 
             but with different position-->
             <link name='right_wheel'>
-                <pose relative_to="chassis">
-                -0.5 -0.6 0 -1.5707 0 0</pose> 
+                <!-- Back (-x) and right (-y) position -->
+                <pose relative_to="chassis"> -0.5 -0.6 0 -1.5707 0 0</pose> 
                 <inertial>
                     <mass>1</mass>
                     <inertia>
@@ -217,7 +219,8 @@
             <!-- For convenience, we define a new frame 
             for the caster wheel -->
             <frame name="caster_frame" attached_to='chassis'>
-                <pose>0.8 0 -0.2 0 0 0</pose>
+                <!-- Front (+x) and below (-z) -->
+                <pose>0.8 0 -0.2 0 0 0</pose> 
             </frame>
             <!--caster wheel-->
             <link name='caster'>
