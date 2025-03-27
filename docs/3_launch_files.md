@@ -1,4 +1,4 @@
-## Launch Files
+# Launch Files
 
 A launch file is a file that allows you to start multiple nodes with a single command, without having to start each node in an individual terminal window.
 
@@ -7,7 +7,7 @@ The launch file is greatly useful to configure complex systems, as it allows you
 Launch files can be written in Python, XML, or YAML.
 We will focus on Python launch files, as they are more flexible and easier to read than XML and YAML launch files.
 
-### Create a Launch File
+## Create a Launch File
 
 For example, let's create a launch file for the `talker` and `listener` nodes.
 
@@ -46,7 +46,7 @@ The executable name is the name given to the `entry point` in the `setup.py` fil
 The node name is the name that will be displayed in the ROS 2 graph.
 Multiple instances of the same executable node can be created by changing the `name` argument (e.g., `name='talker1'`, `name='talker2'`, etc.).
 
-### Integrate a Launch File in a Package
+## Integrate a Launch File in a Package
 
 To integrate the launch file into the package, you must update the `setup.py` file of the package.
 Specifically, you must include the launch file in the `data_files` list.
@@ -69,7 +69,7 @@ from glob import glob
 
 Note that the new import statements are placed *before* the other import statements.
 
-### Run the Launch File
+## Run the Launch File
 
 To run the launch file, move to the `launch` directory and run the following command:
 
