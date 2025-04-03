@@ -2,7 +2,8 @@
 
 In this tutorial, we will learn how to move a robot in Gazebo using ROS.
 First, we will see how to move a robot in Gazebo using Gazebo's built-in tools.
-Then, we will see how to interface Gazebo with ROS to move a robot using ROS topics and messages.
+Second, we will explore how to get the position and orientation of a robot in Gazebo using the `PosePublisher` plugin.
+Finally, we will discuss the ROS-Gazebo bridge, which allows ROS nodes to publish and subscribe to Gazebo topics and messages. This bridge enables seamless communication between ROS and Gazebo, allowing you to control Gazebo simulations using ROS messages.
 
 ## Moving a Robot in Gazebo
 
@@ -174,3 +175,66 @@ ign topic -t /model/rover_blue/pose -i
 where the `-i` flag stands for "info" and will display the message type being published on the specified topic, which in this case will typically be `ignition.msgs.Pose` or a similar message type depending on the version of Gazebo you are using.
 
 ## The ROS-Gazebo Bridge
+
+`ros_gz_bridge` provides a network bridge which enables the exchange of messages between ROS 2 and Gazebo Transport, which is the communication component used by Gazebo.
+Its support is limited to only certain message types, meaning that not all messages can be exchanged between ROS 2 and Gazebo Transport.
+To check if a message type is supported, you can refer to this [README](https://github.com/gazebosim/ros_gz/blob/ros2/ros_gz_bridge/README.md) file from the `ros_gz_bridge` official repository.
+
+### Installing `ros_gz_bridge`
+
+To install `ros_gz_bridge`, you can use the following command:
+
+```bash
+sudo apt install ros-<ros2-distro>-ros-gz-bridge
+```
+
+Make sure to replace `<ros2-distro>` with the name of your ROS 2 distribution (e.g., `iron`, `humble`, etc.). For example, if you are using ROS 2 Iron, the command would be:
+
+```bash
+sudo apt install ros-iron-ros-gz-bridge
+```
+
+### Launching a ROS-Gazebo Bridge from the Command Line
+
+To launch a bridge, the `parameter_bridge` executable from ROS2's `ros_gz_bridge` package can be used.
+Therefore, after sourcing your ROS 2 installation (e.g., `source /opt/ros/iron/setup.bash`), you can use the following syntax to start the bridge:
+
+```bash
+ros2 run ros_gz_bridge parameter_bridge <GZ_TOPIC>@<ROS_MSG_TYPE>@<GZ_MSG_TYPE>
+```
+
+where `<GZ_TOPIC>` is the name of the Gazebo topic to bridge, `<ROS_MSG_TYPE>` is the ROS2 message type, and `<GZ_MSG_TYPE>` is the Gazebo message type.
+
+The first `@` symbol is used simply to separate the Gazebo topic from the ROS2 message type, while the second `@` symbol is used to define the direction of the bridge.
+Indeed, the bridge can be unidirectional or bidirectional, according to the symbol used after the `<ROS_MSG_TYPE>`.
+The following symbols can be used to define the direction of the bridge:
+
+- `@`: Bidirectional bridge between ROS and Gazebo.
+- `[`: Unidirectional bridge from Gazebo to ROS.
+- `]`: Unidirectional bridge from ROS to Gazebo.
+
+The ROS and Gazebo message types must be specified in specific formats:
+
+- ROS message types are specified in the format `<package_name>/msg/<msg_type>`, where `<package_name>` is the name of the package that contains the message type, and `<msg_type>` is the name of the message type. For instance, the ROS message type for a `Twist` message is `geometry_msgs/msg/Twist`.
+- Gazebo message types are specified in the format `<package_name>.msgs/<msg_type>`, where `<package_name>` is the name of the package that contains the message type, and `<msg_type>` is the name of the message type. For instance, the Gazebo message type for a `Twist` message is `gz.msgs.Twist`.
+
+The name and format of the ROS and Gazebo message types can be found in the [README](https://github.com/gazebosim/ros_gz/blob/ros2/ros_gz_bridge/README.md) previously mentioned.
+
+### Launching a ROS-Gazebo Bridge Using a Launch File
+
+A bridge can be launched also within a ROS2 launch file, which is a convenient way to start multiple bridges at once.
+Here is an example of a `parameter_bridge` node that can be included in a ROS2 launch file:
+
+```python
+Node(
+    package='ros_gz_bridge',
+    executable='parameter_bridge',
+    arguments=[
+        '/GZ_cmd_vel@geometry_msgs/msg/Twist@gz.msgs.Twist'
+    ],
+    output='screen',  # Optional: to see the output in the terminal
+    name='bridge_cmd_vel'  # Name of the parameter bridge node
+),
+```
+
+This example shows how to create a `Node` in a ROS2 launch file that runs the `parameter_bridge` executable to bidirectionally bridge the `/GZ_cmd_vel` Gazebo topic which receives `gz.msgs.Twist` Gazebo messages that are mapped to the `geometry_msgs/msg/Twist` ROS2 message type.
