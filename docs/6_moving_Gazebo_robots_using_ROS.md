@@ -11,7 +11,8 @@ Plugins are pieces of code that enable the user to control many aspects of a Gaz
 The `diff_drive` plugin is a plugin that allows you to control a robot with differential drive (i.e., a robot whose movement is controlled by varying the speeds of two independently driven wheels mounted on the same axis).
 
 Plugins are added to the SDF file as `<plugin>` tags.
-For instance, the following lines add the `diff_drive` plugin to the `vehicle_blue` model we introduced earlier.
+For instance, the following lines add the `diff_drive` plugin to the `rover_blue` model we introduced in [the previous example](4_visualization_gazebo.md#rover-robot-chassis):
+
 These lines should be added within the `<model>` tag:
 
 ```xml
@@ -49,7 +50,7 @@ In one terminal window, the robot world can be started by running the following 
 ign gazebo --render-engine ogre <path/to>/rover_world_with_diff_drive.sdf
 ```
 
-where `rover_world_with_diff_drive.sdf` is the SDF file that contains the `rover_blue` model with the `diff_drive` plugin.
+where `rover_world_with_diff_drive.sdf` is the SDF file that contains the `rover_blue` model with the `diff_drive` plugin, which can be found [here](../examples/gazebo/rover_world_with_diff_drive.sdf).
 In another terminal window, the robot can be moved by publishing velocity commands to the `cmd_vel` topic:
 
 ```bash
@@ -61,6 +62,12 @@ The command above uses several flags:
 - `-t`: Specifies the topic to publish the message to.
 - `-m`: Specifies the message type to publish.
 - `-p`: Specifies the content of the message.
+
+The `ign topic` command allows you to list all available Gazebo topics by using the `-l` flag:
+
+```bash
+ign topic -l
+```
 
 To know the meaning of all available flags, you can run the following command:
 
@@ -89,3 +96,81 @@ For example, the plugin for a six-wheeled robot would look like this:
     <topic>cmd_vel</topic>
 </plugin>
 ```
+
+## Getting Robot Position and Orientation in Gazebo
+
+To get the position and orientation of a robot in Gazebo, you can use the `pose-publisher` plugin provided by Gazebo.
+The `pose-publisher` plugin creates a topic where the position and orientation of the robot are published at a specified frequency.
+The `pose-publisher` plugin can be added to any model in the SDF file as follows:
+
+```xml
+<model name="rover_blue">
+    <!-- Other tags... -->
+    <plugin 
+        filename="libignition-gazebo-pose-publisher-system.so"
+        name="ignition::gazebo::systems::PosePublisher">
+        <publish_link_pose>false</publish_link_pose>
+        <publish_nested_model_pose>true</publish_nested_model_pose>        <update_frequency>1</update_frequency> 
+    </plugin>
+    <!-- Other tags... -->
+</model>
+```
+
+In this example, the `PosePublisher` plugin is added to the `rover_blue` model.
+The `<plugin>` tag has several parameters that can be set:
+- `filename`: The name of the plugin library, which is `libignition-gazebo-pose-publisher-system.so`.
+- `name`: The name of the plugin, which is `ignition::gazebo::systems::PosePublisher`.
+- `<publish_link_pose>`: If set to `true`, it will publish the pose of every link in the model. In this case, it is set to `false` to publish only the pose of the model itself.
+- `<publish_nested_model_pose>`: If set to `true`, it will publish the pose of nested models (models included in the parent model). In this case, it is set to `true` to publish the pose of the included models.
+- `<update_frequency>`: The frequency (in Hz) at which the pose is published. In this case, it is set to `1 Hz`.
+
+Once the `PosePublisher` plugin is added to the SDF file, you can start Gazebo with the updated SDF file:
+
+```bash
+ign gazebo --render-engine ogre <path/to>/car_world_with_pose_publisher.sdf
+```
+
+Then, you can list the available topics in Gazebo to find the pose topic:
+
+```bash
+ign topic -l
+```
+
+The output will show a list of all the topics being published by Gazebo, including the pose topic, for example:
+
+```plaintext
+/clock
+/gazebo/resource_paths
+/gui/camera/pose
+/model/rover_blue/odometry
+/model/rover_blue/pose
+/model/rover_blue/tf
+/stats
+/world/car_world/clock
+/world/car_world/dynamic_pose/info
+/world/car_world/pose/info
+/world/car_world/scene/deletion
+/world/car_world/scene/info
+/world/car_world/state
+/world/car_world/stats
+```
+
+Note that the name of the topic is `/model/<model_name>/pose`, where `<model_name>` is the name of the model you added the `PosePublisher` plugin to (in this case, `rover_blue`).
+
+To subscribe to the pose topic and see the messages being published, you can use the `ign topic` command as follows:
+
+```bash
+ign topic -t /model/rover_blue/pose -e
+```
+
+where the `-e` flag echoes the messages to the terminal as they are received.
+
+To get some info on the message type being published on the `/model/rover_blue/pose` topic, you can use the following command:
+
+```bash
+ign topic -t /model/rover_blue/pose -i
+```
+
+where the `-i` flag stands for "info" and will display the message type being published on the specified topic, which in this case will typically be `ignition.msgs.Pose` or a similar message type depending on the version of Gazebo you are using.
+
+## The ROS-Gazebo Bridge
