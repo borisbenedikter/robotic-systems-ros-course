@@ -412,7 +412,7 @@
                 <wheel_separation>1.2</wheel_separation> <!-- (-0.6 to 0.6) -->
                 <wheel_radius>0.4</wheel_radius>       <!-- Cylinder radius -->
                 <odom_publish_frequency>1</odom_publish_frequency>
-                <topic>GZ_cmd_vel</topic>
+                <topic>rover_blue_cmd_vel</topic>
             </plugin>
 
             <plugin 

@@ -22,7 +22,7 @@ def generate_launch_description():
             package='ros_gz_bridge',
             executable='parameter_bridge',
             arguments=[
-                '/GZ_cmd_vel@geometry_msgs/msg/Twist@gz.msgs.Twist'
+                '/rover_blue_cmd_vel@geometry_msgs/msg/Twist@gz.msgs.Twist'
             ],
             output='screen',  # Optional: to see the output in the terminal
             name='bridge_cmd_vel'  # Name of the parameter bridge node

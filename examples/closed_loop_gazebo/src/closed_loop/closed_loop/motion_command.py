@@ -35,7 +35,7 @@ class MotionCommand(Node):
         # the turtle
         self.publisher_ = self.create_publisher(
             Twist,                  # Message type 
-            '/GZ_cmd_vel',     # Topic
+            '/rover_blue_cmd_vel',     # Topic
             10)                     # QoS profile (history depth)
         publisher_timer_period = 1 # seconds
         self.publisher_timer = self.create_timer(

@@ -230,11 +230,11 @@ Node(
     package='ros_gz_bridge',
     executable='parameter_bridge',
     arguments=[
-        '/GZ_cmd_vel@geometry_msgs/msg/Twist@gz.msgs.Twist'
+        '/rover_blue_cmd_vel@geometry_msgs/msg/Twist@gz.msgs.Twist'
     ],
     output='screen',  # Optional: to see the output in the terminal
     name='bridge_cmd_vel'  # Name of the parameter bridge node
 ),
 ```
 
-This example shows how to create a `Node` in a ROS2 launch file that runs the `parameter_bridge` executable to bidirectionally bridge the `/GZ_cmd_vel` Gazebo topic which receives `gz.msgs.Twist` Gazebo messages that are mapped to the `geometry_msgs/msg/Twist` ROS2 message type.
+This example shows how to create a `Node` in a ROS2 launch file that runs the `parameter_bridge` executable to bidirectionally bridge the `/rover_blue_cmd_vel` Gazebo topic which receives `gz.msgs.Twist` Gazebo messages that are mapped to the `geometry_msgs/msg/Twist` ROS2 message type.
