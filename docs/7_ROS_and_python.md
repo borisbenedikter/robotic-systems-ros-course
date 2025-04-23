@@ -82,7 +82,7 @@ def generate_launch_description():
             package='package',
             executable='node',
             name='node'         
-        ),])
+        )])
 ```
 
 By replacing the `Node` class with the `ExecuteProcess` class, the launch file would look like this:
